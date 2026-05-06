@@ -1,34 +1,50 @@
 $ErrorActionPreference = 'Stop'
+[Console]::InputEncoding = [System.Text.UTF8Encoding]::new($false)
+[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false)
+$OutputEncoding = [System.Text.UTF8Encoding]::new($false)
 
 $projectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $tempRoot = 'C:\Users\ORANGE\AppData\Local\Temp\bandori-pet-build'
 $releaseDir = Join-Path $projectRoot 'release'
 $npmCmd = 'G:\Program Files\nodejs\npm.cmd'
 
-Write-Host '==> 准备临时构建目录'
+function Invoke-CmdCommand {
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$CommandLine
+  )
+
+  $wrappedCommand = "$CommandLine 2>&1"
+  & cmd.exe /d /c $wrappedCommand
+  if ($LASTEXITCODE -ne 0) {
+    throw "Command failed with exit code ${LASTEXITCODE}: $CommandLine"
+  }
+}
+
+Write-Host '==> Prepare temporary build directory'
 if (Test-Path $tempRoot) {
   Remove-Item -LiteralPath $tempRoot -Recurse -Force -ErrorAction SilentlyContinue
 }
 New-Item -ItemType Directory -Path $tempRoot | Out-Null
 
-Write-Host '==> 复制项目到英文临时目录'
+Write-Host '==> Copy project to ASCII temp directory'
 robocopy $projectRoot $tempRoot /MIR /XD node_modules dist release .git | Out-Null
 
 Push-Location $tempRoot
 try {
-  Write-Host '==> 安装依赖'
-  & $npmCmd install
+  Write-Host '==> Install dependencies'
+  Invoke-CmdCommand "`"$npmCmd`" install"
 
-  Write-Host '==> 开始打包'
+  Write-Host '==> Build portable exe'
   $env:CSC_IDENTITY_AUTO_DISCOVERY = 'false'
-  & $npmCmd run build
+  Invoke-CmdCommand "`"$npmCmd`" run build"
 
   $builtExe = Get-ChildItem -Path (Join-Path $tempRoot 'dist') -Filter *.exe |
     Sort-Object LastWriteTime -Descending |
     Select-Object -First 1
 
   if (-not $builtExe) {
-    throw '没有在 dist 目录中找到打包后的 exe 文件。'
+    throw 'No built exe was found in the dist directory.'
   }
 
   if (!(Test-Path $releaseDir)) {
@@ -37,12 +53,12 @@ try {
 
   $targetExe = Join-Path $releaseDir $builtExe.Name
 
-  Write-Host "==> 复制成品到 release: $($builtExe.Name)"
+  Write-Host "==> Copy artifact to release: $($builtExe.Name)"
   Copy-Item -LiteralPath $builtExe.FullName -Destination $targetExe -Force
 
   Write-Host ''
-  Write-Host '打包完成。'
-  Write-Host "输出文件: $targetExe"
+  Write-Host 'Build completed.'
+  Write-Host "Output file: $targetExe"
 }
 finally {
   Pop-Location
