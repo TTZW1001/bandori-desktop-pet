@@ -1,0 +1,368 @@
+* {
+  box-sizing: border-box;
+  user-select: none;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: transparent;
+}
+
+body {
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+#app {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#stage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  image-rendering: auto;
+}
+
+#panel-backdrop {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow: auto;
+  background: transparent;
+  backdrop-filter: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#panel-backdrop.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#panel-card {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 264px);
+  max-height: calc(100vh - 32px);
+  padding: 16px 16px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 20px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 248, 252, 0.9));
+  box-shadow:
+    0 18px 34px rgba(99, 71, 92, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  transform: translateY(12px) scale(0.97);
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#panel-card.is-help {
+  width: min(100%, 304px);
+  padding: 16px 16px 15px;
+}
+
+#panel-backdrop.is-visible #panel-card {
+  transform: translateY(0) scale(1);
+}
+
+#panel-eyebrow {
+  color: rgba(255, 47, 116, 0.9);
+  font-family: "Microsoft YaHei UI", "PingFang SC", "Noto Sans SC", sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+#panel-title {
+  margin: 6px 0 0;
+  color: rgba(45, 43, 52, 0.96);
+  font-family: "Microsoft YaHei UI", "PingFang SC", "Noto Sans SC", sans-serif;
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+#panel-description {
+  margin: 8px 0 0;
+  color: rgba(99, 88, 101, 0.92);
+  font-family: "Microsoft YaHei UI", "PingFang SC", "Noto Sans SC", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.45;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+#panel-card.is-help #panel-description {
+  flex: 1 1 auto;
+  margin-top: 10px;
+  padding: 12px 13px;
+  max-height: min(54vh, 340px);
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.76);
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 248, 252, 0.72));
+  color: rgba(81, 71, 86, 0.94);
+  font-size: 11.5px;
+  line-height: 1.68;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 47, 116, 0.42) rgba(255, 255, 255, 0.48);
+}
+
+#panel-card.is-help #panel-description::-webkit-scrollbar {
+  width: 8px;
+}
+
+#panel-card.is-help #panel-description::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.42);
+  border-radius: 999px;
+}
+
+#panel-card.is-help #panel-description::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(255, 47, 116, 0.56), rgba(255, 132, 173, 0.62));
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+}
+
+.panel-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.panel-field span {
+  color: rgba(97, 77, 93, 0.9);
+  font-family: "Microsoft YaHei UI", "PingFang SC", "Noto Sans SC", sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.panel-field input {
+  width: 100%;
+  padding: 10px 11px;
+  border: 1px solid rgba(255, 193, 215, 0.9);
+  border-radius: 14px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.9);
+  color: rgba(45, 43, 52, 0.96);
+  font-family: "Microsoft YaHei UI", "PingFang SC", "Noto Sans SC", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  transition:
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    transform 140ms ease;
+}
+
+.panel-field input:focus {
+  border-color: rgba(255, 47, 116, 0.88);
+  box-shadow: 0 0 0 3px rgba(255, 47, 116, 0.14);
+  transform: translateY(-1px);
+}
+
+#panel-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+#panel-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 72px;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: 999px;
+  font-family: "Microsoft YaHei UI", "PingFang SC", "Noto Sans SC", sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    filter 140ms ease,
+    opacity 140ms ease;
+}
+
+#panel-actions button:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.02);
+}
+
+#panel-actions button:active {
+  transform: translateY(0);
+}
+
+#panel-cancel {
+  background: rgba(233, 223, 228, 0.92);
+  color: rgba(90, 75, 87, 0.92);
+}
+
+#panel-confirm {
+  background: linear-gradient(135deg, #ff2f74, #ff5a95);
+  color: #fff;
+}
+
+#panel-card.is-help #panel-actions {
+  margin-top: 12px;
+}
+
+#panel-card.is-help #panel-confirm {
+  min-width: 84px;
+}
+
+#focus-chip {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  min-width: 84px;
+  max-width: 154px;
+  padding: 8px 10px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.74));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  transform: translateY(-8px) scale(0.98);
+  transition:
+    opacity 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+#focus-chip.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+#focus-chip-label {
+  color: rgba(112, 88, 108, 0.9);
+  font-family: "Microsoft YaHei UI", "PingFang SC", "Noto Sans SC", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.08em;
+}
+
+#focus-chip-time {
+  margin-top: 4px;
+  color: rgba(44, 42, 54, 0.95);
+  font-family: "Consolas", "SFMono-Regular", "Cascadia Mono", monospace;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+#focus-chip-task {
+  margin-top: 4px;
+  color: rgba(80, 72, 86, 0.88);
+  font-family: "Microsoft YaHei UI", "PingFang SC", "Noto Sans SC", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#dialogue {
+  --panel-bg: rgba(255, 255, 255, 0.82);
+  --panel-border: rgba(255, 255, 255, 0.92);
+  --name-bg: #ff2f74;
+  --name-shadow: rgba(255, 47, 116, 0.28);
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 12px;
+  opacity: 0;
+  transform: translateY(20px) scale(0.985);
+  transform-origin: left bottom;
+  transition:
+    opacity 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+#dialogue.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+#dialogue-name {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  max-width: min(132px, 48vw);
+  padding: 6px 12px 7px;
+  border-radius: 12px 12px 0 12px;
+  background: var(--name-bg);
+  box-shadow:
+    0 6px 16px var(--name-shadow),
+    inset 0 -2px 0 rgba(255, 255, 255, 0.28);
+  color: #fff;
+  font-family: "Microsoft YaHei UI", "PingFang SC", "Noto Sans SC", sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+#dialogue-body {
+  position: relative;
+  margin-top: -2px;
+  min-height: 86px;
+  padding: 14px 16px 14px;
+  border: 1px solid var(--panel-border);
+  border-radius: 0 18px 18px 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), var(--panel-bg));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  overflow: hidden;
+}
+
+#dialogue-body::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0) 38%),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+
+#dialogue-text {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  color: rgba(45, 43, 52, 0.92);
+  font-family: "Microsoft YaHei UI", "PingFang SC", "Noto Sans SC", sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.46;
+  letter-spacing: 0.01em;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+  white-space: pre-wrap;
+  word-break: break-word;
+}

@@ -1,0 +1,56 @@
+{
+  "name": "desktop-pet-demo",
+  "version": "1.0.1",
+  "description": "BanG Dream Live2D desktop pet demo for local play.",
+  "author": "ORANGE",
+  "main": "main.js",
+  "productName": "邦邦桌宠（测试版）",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win portable"
+  },
+  "dependencies": {
+    "pixi-live2d-display": "^0.4.0",
+    "pixi.js": "^6.5.10"
+  },
+  "devDependencies": {
+    "electron": "^37.2.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.orange.bandori-desktop-pet",
+    "productName": "邦邦桌宠（测试版）",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "package.json",
+      "renderer/**/*",
+      "vendor/**/*",
+      "models/**/*",
+      "node_modules/**/*"
+    ],
+    "asar": true,
+    "npmRebuild": false,
+    "buildDependenciesFromSource": false,
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "signAndEditExecutable": false,
+      "icon": "icon.ico",
+      "artifactName": "邦邦桌宠（测试版）.exe"
+    },
+    "portable": {
+      "artifactName": "邦邦桌宠（测试版）.exe"
+    }
+  }
+}

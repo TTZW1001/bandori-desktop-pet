@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Kokoro Desktop Pet</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="stage"></canvas>
+      <div id="panel-backdrop" aria-hidden="true">
+        <form id="panel-card">
+          <div id="panel-eyebrow"></div>
+          <h2 id="panel-title"></h2>
+          <p id="panel-description"></p>
+          <label class="panel-field" id="panel-field-primary">
+            <span id="panel-primary-label"></span>
+            <input id="panel-primary-input" type="text" maxlength="32" />
+          </label>
+          <label class="panel-field" id="panel-field-secondary">
+            <span id="panel-secondary-label"></span>
+            <input id="panel-secondary-input" type="number" min="1" max="180" step="1" />
+          </label>
+          <div id="panel-actions">
+            <button type="button" id="panel-cancel">取消</button>
+            <button type="submit" id="panel-confirm">确定</button>
+          </div>
+        </form>
+      </div>
+      <div id="focus-chip" aria-live="polite">
+        <div id="focus-chip-label">专注中</div>
+        <div id="focus-chip-time">25:00</div>
+        <div id="focus-chip-task"></div>
+      </div>
+      <div id="dialogue" aria-live="polite" aria-atomic="true">
+        <div id="dialogue-name"></div>
+        <div id="dialogue-body">
+          <p id="dialogue-text"></p>
+        </div>
+      </div>
+    </div>
+
+    <script src="../node_modules/pixi.js/dist/browser/pixi.min.js"></script>
+    <script src="../vendor/live2d.min.js"></script>
+    <script src="../node_modules/pixi-live2d-display/dist/cubism2.min.js"></script>
+    <script src="./dialogue-data.js"></script>
+    <script src="./motion-data.js"></script>
+    <script src="./renderer.js"></script>
+  </body>
+</html>
